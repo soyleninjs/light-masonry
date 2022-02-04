@@ -1,13 +1,13 @@
 # light-masonry
 
-[![npm](https://img.shields.io/npm/v/light-masonry?color=check&style=plastic)](https://www.npmjs.com/package/light-masonry)
-[![npm bundle size](https://img.shields.io/bundlephobia/min/light-masonry?style=plastic)](https://www.npmjs.com/package/light-masonry)
-
 Script para crear un layout tipo masonry.
 
 Solo es necesario tener el contenedor junto a sus hijos que se acomodaran en este tipo de layout.
 
 El script formateara todo, agregara y colocara lo necesario para que funcione el layout.
+
+[![npm](https://img.shields.io/npm/v/light-masonry?color=check&style=plastic)](https://www.npmjs.com/package/light-masonry)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/light-masonry?style=plastic)](https://www.npmjs.com/package/light-masonry)
 
 ## Demo
 

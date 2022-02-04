@@ -6,14 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soyleninjs/light-masonry.git"
+  },
   "keywords": [
+    "light-masonry",
     "masonry",
+    "light",
     "layout",
-    "grid",
+    "columns",
     "css",
-    "html",
-    "javascript"
+    "javascript",
+    "js",
+    "html"
   ],
   "author": "@soyleninjs",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/soyleninjs/light-masonry/issues"
+  },
+  "homepage": "https://github.com/soyleninjs/light-masonry#readme"
 }
