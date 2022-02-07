@@ -33,7 +33,13 @@ npm i light-masonry
 
 ## CSS
 
-- Este script necesita algunos styles base:
+- Puedes obtener los estilos directamente del paquete con:
+
+  ```css
+  @import "light-masonry/css/light-masonry.css";
+  ```
+
+- O puedes copiarlos de aqui:
 
   ```css
   /* ------------------ light-masonry.css ------------------ */
@@ -64,15 +70,15 @@ npm i light-masonry
   }
   ```
 
-  **Aquí hay 3 variables css que podemos manipular**:
+**Aquí hay 3 variables css que podemos manipular**:
 
-  - **—gap**
-    El valor de este cambia los espacios tanto entre las filas y las columnas, totalmente parejo.
-  - **—gap-between-columns**
-    El valor de este cambia solo los espacios entre cada columna. _Eje horizontal_
-  - **—gap-between-items**
-    El valor de este cambia solo los espacios entre cada item. _Eje vertical_
-  - **NOTA:** Estas variables van en la misma clase que le pasaste al script.
+- **—gap**
+  El valor de este cambia los espacios tanto entre las filas y las columnas, totalmente parejo.
+- **—gap-between-columns**
+  El valor de este cambia solo los espacios entre cada columna. _Eje horizontal_
+- **—gap-between-items**
+  El valor de este cambia solo los espacios entre cada item. _Eje vertical_
+- **NOTA:** Estas variables van en la misma clase que le pasaste al script.
 
 ## Parámentros
 
