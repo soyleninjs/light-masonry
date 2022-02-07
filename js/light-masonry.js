@@ -23,7 +23,7 @@ const lightMasonry = (containerClass, newOptions = {}) => {
   const dataCallback = {};
   let firstExecution = false;
   let allItems = [];
-  const defaultOptions = {
+  const finalOptions = {
     defaultColumns: 4,
     responsive: {
       1440: 4,
@@ -32,8 +32,8 @@ const lightMasonry = (containerClass, newOptions = {}) => {
     },
     init: (data) => {},
     afterBreakpoint: (data) => {},
+    ...newOptions,
   };
-  const finalOptions = { ...defaultOptions, ...newOptions };
 
   // ------------------------ END VARAIBLES ------------------------
 
