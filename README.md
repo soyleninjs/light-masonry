@@ -72,7 +72,7 @@ npm i light-masonry
     El valor de este cambia solo los espacios entre cada columna. _Eje horizontal_
   - **—gap-between-items**
     El valor de este cambia solo los espacios entre cada item. _Eje vertical_
-    **NOTA:** Estas variables van en la misma clase que le pasaste al script.
+  - **NOTA:** Estas variables van en la misma clase que le pasaste al script.
 
 ## Parámentros
 
