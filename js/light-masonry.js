@@ -1,6 +1,4 @@
 /* eslint-disable no-empty-function, no-unused-vars */
-/* light-masonry.js v1.0.0 */
-
 /*
 
   agregar configuracion para Mode:

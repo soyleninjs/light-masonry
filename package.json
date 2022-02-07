@@ -2,7 +2,7 @@
   "name": "light-masonry",
   "version": "1.0.0",
   "description": "Script para crear un layout tipo masonry.",
-  "main": "js/light-masonry.min.js",
+  "main": "js/light-masonry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
