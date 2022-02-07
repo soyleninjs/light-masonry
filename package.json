@@ -1,6 +1,6 @@
 {
   "name": "light-masonry",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Script para crear un layout tipo masonry.",
   "main": "js/light-masonry.js",
   "scripts": {
