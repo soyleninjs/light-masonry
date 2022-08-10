@@ -12,7 +12,12 @@
 
 const lightMasonry = (containerClass, newOptions = {}) => {
   // ------------------------ VARAIBLES ------------------------
-
+  if (containerClass === "") {
+    window.console.error(
+      "[lightMasonry]: Selector del contenedor vacío, coloca un selector válido!",
+    );
+    return
+  }
   const $masonryWrapper = document.querySelector(containerClass);
   const hiddenBox =
     '<div class="light-masonry-hidden-box" style="display: none !important;"></div>';
@@ -25,6 +30,7 @@ const lightMasonry = (containerClass, newOptions = {}) => {
   let allItems = [];
   const finalOptions = {
     defaultColumns: 4,
+    resizeDelay: 0, 
     responsive: {
       1440: 4,
       834: 3,
@@ -147,6 +153,7 @@ const lightMasonry = (containerClass, newOptions = {}) => {
 
   const setLayout = () => {
     let finalColumns = finalOptions.defaultColumns;
+    dataCallback.breakpoint = "defaultColumns"
     if (finalOptions.responsive !== undefined) {
       Object.keys(finalOptions.responsive)
         .reverse()
@@ -180,9 +187,32 @@ const lightMasonry = (containerClass, newOptions = {}) => {
     }
   };
 
+  const debounce = (func, wait, immediate = false) => {
+    let timeout;
+
+    return (...args) => {
+      let callNow = immediate && !timeout;
+    
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        timeout = null;
+        if (!immediate) func.apply(this, args);
+      }, wait);
+    
+      if (callNow) func.apply(this, args);
+    };
+  };
+
   // ------------------------ END FUNCTIONALITY ------------------------
 
   // ------------------------ BASE CONFIG ------------------------
+
+  if (!$masonryWrapper) {
+    window.console.error(
+      "[lightMasonry]: Contenedor no encontrado, coloca un selector válido!",
+    );
+    return;
+  }
 
   setWrapperClass();
   setChildsClass();
@@ -201,7 +231,12 @@ const lightMasonry = (containerClass, newOptions = {}) => {
 
   // ------------------------ EVENTS ------------------------
 
-  window.addEventListener("resize", setLayout);
+  if (finalOptions.resizeDelay === 0) {
+    window.addEventListener("resize", setLayout);
+  }
+  else{
+    window.addEventListener("resize", debounce(setLayout, finalOptions.resizeDelay));
+  }
 
   // ------------------------ END EVENTS ------------------------
 };

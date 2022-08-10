@@ -92,6 +92,7 @@ npm i light-masonry
   ```javascript
   const options = {
     defaultColumns: 4,
+    resizeDelay: 0,
     responsive: {
       1440: 4,
       834: 3,
@@ -103,6 +104,13 @@ npm i light-masonry
   ```
   - **defaultColumns [Optional] [Number]**
     Este campo sirve para colocar las columnas por default que tendrá el layout dado caso no se pasen medidas responsive o si las medidas responsive dadas ya no se se cumplen
+    ```javascript
+    const options = {
+      defaultColumns: 5,
+    };
+    ```
+  - **resizeDelay [Optional] [Number]**
+    Este campo activa el sistema "debounce" para el evento resize, por default no esta activado, dejando que el callback del resize se execute cada pixel, con el "debounce" le colocas un retardo a este callback, haciendo que este se active despues del tiempo dado en este parametro (tiempo en milisegundos).
     ```javascript
     const options = {
       defaultColumns: 5,
