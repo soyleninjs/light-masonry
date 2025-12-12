@@ -1,14 +1,8 @@
 {
   "name": "light-masonry",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A lightweight, responsive masonry layout library with zero dependencies. Perfect for creating Pinterest-style grid layouts.",
   "main": "light-masonry.min.js",
-  "unpkg": "light-masonry.min.js",
-  "jsdelivr": "light-masonry.min.js",
-  "files": [
-    "README.md",
-    "LICENSE"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/soyleninjs/light-masonry.git"
