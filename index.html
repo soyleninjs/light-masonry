@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1, minimum-scale=1, shrink-to-fit=no">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Light Masonry - Layouts tipo Pinterest con CSS Grid" />
+    <meta property="og:description" content="Librería JavaScript ligera (~2KB) para crear layouts masonry responsivos. Zero dependencias, basada en CSS Grid. Perfecta para galerías estilo Pinterest." />
+    <meta property="og:image" content="https://masonry.soylenin.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Light Masonry - Layouts masonry con CSS Grid" />
+    <meta property="og:url" content="https://masonry.soylenin.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Light Masonry" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@soyleninjs" />
+    <meta name="twitter:creator" content="@soyleninjs" />
+    <meta name="twitter:title" content="Light Masonry - Layouts tipo Pinterest con CSS Grid" />
+    <meta name="twitter:description" content="Librería JavaScript ligera (~2KB) para crear layouts masonry responsivos. Zero dependencias, basada en CSS Grid." />
+    <meta name="twitter:image" content="https://masonry.soylenin.com/assets/og-image.png" />
+    <meta name="twitter:image:alt" content="Light Masonry - Layouts masonry con CSS Grid" />
+
+    <!-- SEO -->
+    <meta name="description" content="Light Masonry: Librería JavaScript ligera para crear layouts masonry responsivos. Zero dependencias, basada en CSS Grid, perfecta para galerías estilo Pinterest." />
+    <meta name="keywords" content="masonry, layout, grid, responsive, pinterest, css-grid, javascript, lightweight, zero-dependencies, gallery, columns">
+    <meta name="author" content="@soyleninjs" />
+
+    <!-- Title -->
+    <title>Light Masonry - Layout tipo Pinterest con CSS Grid</title>
+
+    <!-- DarkUI CSS -->
+    <link href="ui/darkui.css" rel="stylesheet" />
+
+    <!-- Prism.js for code highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+
+    <!-- Light Masonry CSS -->
+    <link href="css/light-masonry.css" rel="stylesheet" />
+
+    <style>
+        /* Custom styles for hero section */
+        .hero {
+            background: var(--darkui-gradient-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 70%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Features grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--darkui-spacing-6);
+        }
+
+        .feature-card {
+            background: var(--darkui-bg-secondary);
+            border: 1px solid var(--darkui-border-primary);
+            border-radius: var(--darkui-radius-lg);
+            padding: var(--darkui-spacing-6);
+            transition: all var(--darkui-transition-base);
+        }
+
+        .feature-card:hover {
+            border-color: var(--darkui-color-primary);
+            box-shadow: 0 0 2rem rgba(102, 126, 234, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--darkui-gradient-primary);
+            border-radius: var(--darkui-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--darkui-spacing-4);
+            font-size: 24px;
+        }
+
+        /* Code blocks styling */
+        .code-example {
+            background: var(--darkui-bg-elevated);
+            border: 1px solid var(--darkui-border-primary);
+            border-radius: var(--darkui-radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--darkui-spacing-6);
+        }
+
+        .code-example-header {
+            background: var(--darkui-bg-tertiary);
+            padding: var(--darkui-spacing-3) var(--darkui-spacing-4);
+            border-bottom: 1px solid var(--darkui-border-primary);
+            font-size: var(--darkui-font-size-sm);
+            color: var(--darkui-text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-example pre {
+            margin: 0;
+            padding: var(--darkui-spacing-4);
+            overflow-x: auto;
+        }
+
+        .code-example pre code {
+            font-family: var(--darkui-font-mono);
+            font-size: var(--darkui-font-size-sm);
+        }
+
+        /* Stats section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--darkui-spacing-6);
+            margin: var(--darkui-spacing-8) 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: var(--darkui-spacing-6);
+            background: var(--darkui-bg-secondary);
+            border: 1px solid var(--darkui-border-primary);
+            border-radius: var(--darkui-radius-lg);
+        }
+
+        .stat-number {
+            font-size: var(--darkui-font-size-4xl);
+            font-weight: var(--darkui-font-weight-extrabold);
+            background: var(--darkui-gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--darkui-spacing-2);
+        }
+
+        /* Sidebar customization for desktop */
+        .lm-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--darkui-bg-secondary);
+            border-right: 1px solid var(--darkui-border-primary);
+            overflow-y: auto;
+            z-index: var(--darkui-z-sticky);
+        }
+
+        .lm-sidebar-header {
+            padding: var(--darkui-spacing-5) var(--darkui-spacing-4);
+            border-bottom: 1px solid var(--darkui-border-primary);
+            position: sticky;
+            top: 0;
+            background: var(--darkui-bg-secondary);
+            z-index: 1;
+        }
+
+        .lm-sidebar-icons {
+            display: flex;
+            gap: var(--darkui-spacing-2);
+            margin-top: var(--darkui-spacing-2);
+        }
+
+        .lm-sidebar-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            color: var(--darkui-text-secondary);
+            background: var(--darkui-bg-tertiary);
+            border-radius: var(--darkui-radius-md);
+            transition: all var(--darkui-transition-fast);
+        }
+
+        .lm-sidebar-icons a:hover {
+            color: var(--darkui-text-primary);
+            background: var(--darkui-bg-elevated);
+            transform: translateY(-2px);
+        }
+
+        .lm-sidebar-nav {
+            padding: var(--darkui-spacing-3) var(--darkui-spacing-4);
+        }
+
+        .lm-sidebar-nav ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .lm-sidebar-nav a {
+            display: block;
+            padding: var(--darkui-spacing-2) var(--darkui-spacing-3);
+            color: var(--darkui-text-secondary);
+            text-decoration: none;
+            border-radius: var(--darkui-radius-sm);
+            transition: all var(--darkui-transition-fast);
+            font-size: var(--darkui-font-size-sm);
+        }
+
+        .lm-sidebar-nav a:hover {
+            background: var(--darkui-bg-tertiary);
+            color: var(--darkui-text-primary);
+        }
+
+        .lm-sidebar-nav a.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15)) !important;
+            color: var(--darkui-text-primary) !important;
+            border-left: 2px solid #8b5cf6;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* Responsive - hide desktop sidebar and show mobile sidebar on small screens */
+        @media (max-width: 1024px) {
+            .lm-sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                display: block;
+            }
+        }
+
+        /* Hide mobile sidebar on desktop */
+        @media (min-width: 1025px) {
+            .sidebar {
+                display: none;
+            }
+        }
+
+        /* Mobile sidebar link hover styles */
+        .sidebar-body a:hover {
+            background: var(--darkui-bg-tertiary) !important;
+            color: var(--darkui-text-primary) !important;
+        }
+
+        /* Mobile sidebar active link styles */
+        .sidebar-body a.active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15)) !important;
+            color: var(--darkui-text-primary) !important;
+            border-left: 2px solid #8b5cf6;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: var(--darkui-font-size-3xl);
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Demo masonry styles */
+        .demo-masonry {
+            --gap: 16px;
+            margin-top: var(--darkui-spacing-8);
+        }
+
+        .demo-masonry-item {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+            border: 1px solid var(--darkui-border-primary);
+            border-radius: var(--darkui-radius-md);
+            padding: var(--darkui-spacing-4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--darkui-font-weight-bold);
+            transition: all var(--darkui-transition-base);
+        }
+
+        .demo-masonry-item:hover {
+            transform: scale(1.05);
+            border-color: var(--darkui-color-primary);
+            box-shadow: 0 0 1rem rgba(102, 126, 234, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Desktop Sidebar Navigation -->
+    <aside class="lm-sidebar">
+        <div class="lm-sidebar-header">
+            <div>
+                <div style="display: flex; align-items: center; gap: var(--darkui-spacing-3);">
+                    <div style="width: 32px; height: 32px; background: var(--darkui-gradient-primary); border-radius: var(--darkui-radius-md); display: flex; align-items: center; justify-content: center; font-size: 20px;">⚡</div>
+                    <span class="text-xl font-bold">Light Masonry</span>
+                </div>
+                <p style="color: var(--darkui-text-tertiary); font-size: var(--darkui-font-size-sm);">
+                    v.2.0.0
+                </p>
+                <div class="lm-sidebar-icons">
+                    <a href="https://github.com/soyleninjs/light-masonry" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="Ver en GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.npmjs.com/package/light-masonry" target="_blank" rel="noopener noreferrer" aria-label="npm" title="Ver en npm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 0v16h16v-16h-16zM13 13h-2v-8h-3v8h-5v-11h10v11z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <nav class="lm-sidebar-nav">
+            <ul>
+                <li><a href="#inicio" data-section="inicio">Inicio</a></li>
+                <li><a href="#features" data-section="features">Características</a></li>
+                <li><a href="#demo" data-section="demo">Demo</a></li>
+                <li><a href="#installation" data-section="installation">Instalación</a></li>
+                <li><a href="#quick-start" data-section="quick-start">Inicio Rápido</a></li>
+                <li><a href="#api" data-section="api">API Reference</a></li>
+                <li><a href="#examples" data-section="examples">Ejemplos</a></li>
+                <li><a href="#css-vars" data-section="css-vars">Variables CSS</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Mobile Sidebar (DarkUI native component) -->
+    <div class="sidebar">
+        <details>
+            <summary class="button button-secondary button-sm button-icon" style="position: fixed; top: var(--darkui-spacing-4); left: var(--darkui-spacing-4); z-index: var(--darkui-z-sticky);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </summary>
+            <div>
+                <div data-mask></div>
+                <div class="sidebar-content">
+                    <div class="sidebar-header">
+                        <div class="flex flex-align-items-start flex-justify-between">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: var(--darkui-spacing-3);">
+                                    <div style="width: 32px; height: 32px; background: var(--darkui-gradient-primary); border-radius: var(--darkui-radius-md); display: flex; align-items: center; justify-content: center; font-size: 20px;">⚡</div>
+                                    <span class="text-xl font-bold">Light Masonry</span>
+                                </div>
+                                <p style="color: var(--darkui-text-tertiary); font-size: var(--darkui-font-size-sm);">
+                                    v.2.0.0
+                                </p>
+                                <div class="lm-sidebar-icons">
+                                    <a href="https://github.com/soyleninjs/light-masonry" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="Ver en GitHub">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="https://www.npmjs.com/package/light-masonry" target="_blank" rel="noopener noreferrer" aria-label="npm" title="Ver en npm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M0 0v16h16v-16h-16zM13 13h-2v-8h-3v8h-5v-11h10v11z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                            <button class="button button-icon button-ghost" data-close aria-label="Cerrar menú">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="sidebar-body">
+                        <nav style="padding: 0;">
+                            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0;">
+                                <li><a href="#inicio" data-section="inicio" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Inicio</a></li>
+                                <li><a href="#features" data-section="features" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Características</a></li>
+                                <li><a href="#demo" data-section="demo" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Demo</a></li>
+                                <li><a href="#installation" data-section="installation" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Instalación</a></li>
+                                <li><a href="#quick-start" data-section="quick-start" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Inicio Rápido</a></li>
+                                <li><a href="#api" data-section="api" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">API Reference</a></li>
+                                <li><a href="#examples" data-section="examples" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Ejemplos</a></li>
+                                <li><a href="#css-vars" data-section="css-vars" data-close style="display: block; padding: var(--darkui-spacing-2) var(--darkui-spacing-3); color: var(--darkui-text-secondary); text-decoration: none; border-radius: var(--darkui-radius-sm); transition: all var(--darkui-transition-fast); font-size: var(--darkui-font-size-sm);">Variables CSS</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </details>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero" style="padding: var(--darkui-spacing-12) 0;">
+        <div class="container hero-content">
+            <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+                <div style="display: inline-flex; align-items: center; gap: var(--darkui-spacing-3); margin-bottom: var(--darkui-spacing-6);">
+                    <div style="width: 80px; height: 80px; background: var(--darkui-gradient-primary); border-radius: var(--darkui-radius-lg); display: flex; align-items: center; justify-content: center; font-size: 48px;">⚡</div>
+                </div>
+
+                <h1 class="heading-1" style="margin-bottom: var(--darkui-spacing-4);">
+                    Layouts Masonry,<br>
+                    <span class="text-gradient">simples y elegantes</span>
+                </h1>
+
+                <p class="text-xl" style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-8); max-width: 700px; margin-left: auto; margin-right: auto;">
+                    Crea layouts tipo Pinterest con CSS Grid. Ligero, responsivo y sin dependencias.
+                    Perfecto para galerías de imágenes, portfolios y más.
+                </p>
+
+                <div style="display: flex; gap: var(--darkui-spacing-4); justify-content: center; flex-wrap: wrap; margin-bottom: var(--darkui-spacing-8);">
+                    <a href="#installation" class="button button-primary button-lg">
+                        Comenzar
+                    </a>
+                    <a href="https://github.com/soyleninjs/light-masonry" target="_blank" rel="noopener noreferrer" class="button button-secondary button-lg">
+                        Ver en GitHub
+                    </a>
+                </div>
+
+                <div style="display: flex; gap: var(--darkui-spacing-3); justify-content: center; flex-wrap: wrap;">
+                    <img src="https://img.shields.io/npm/v/light-masonry?color=blue&style=flat-square" alt="npm version" style="height: 20px;">
+                    <img src="https://img.shields.io/npm/l/light-masonry?style=flat-square" alt="license" style="height: 20px;">
+                    <img src="https://img.shields.io/npm/dm/light-masonry?style=flat-square" alt="downloads" style="height: 20px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-primary);">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">~2KB</div>
+                    <div style="color: var(--darkui-text-secondary);">Tamaño minificado</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Zero</div>
+                    <div style="color: var(--darkui-text-secondary);">Dependencias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div style="color: var(--darkui-text-secondary);">CSS Grid</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Responsive</div>
+                    <div style="color: var(--darkui-text-secondary);">Por diseño</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-secondary);">
+        <div class="container">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    Características principales
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Todo lo que necesitas para crear layouts masonry profesionales
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Zero Dependencias</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Puro JavaScript vanilla. Sin jQuery, sin frameworks. Solo añade el script y listo.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Totalmente Responsive</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Define breakpoints personalizados. Diferentes columnas para cada tamaño de pantalla.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">CSS Grid Nativo</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Aprovecha el poder de CSS Grid. Rendimiento óptimo con tecnología nativa del navegador.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Fácil Configuración</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Configuración simple e intuitiva. Opciones por defecto que funcionan de inmediato.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Variables CSS</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Personaliza espaciados con variables CSS. Cambia gaps entre columnas e items fácilmente.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Resize Inteligente</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Debounce configurable para resize. Mejor rendimiento sin sacrificar la experiencia.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📡</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Callbacks Útiles</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Eventos init y afterBreakpoint. Controla el comportamiento en cada cambio.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Ligero y Rápido</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Menos de 2KB minificado. Carga instantánea y ejecución ultra rápida.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Amplio Soporte</h3>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Compatible con todos los navegadores modernos. Chrome 57+, Firefox 52+, Safari 10.1+.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-primary);">
+        <div class="container">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    Demo Interactivo
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Mira Light Masonry en acción. Cambia el tamaño de tu navegador para ver cómo se adapta.
+                </p>
+            </div>
+
+            <div class="demo-masonry" id="demo-masonry">
+                <div class="demo-masonry-item" style="height: 120px;">Item 1</div>
+                <div class="demo-masonry-item" style="height: 180px;">Item 2</div>
+                <div class="demo-masonry-item" style="height: 140px;">Item 3</div>
+                <div class="demo-masonry-item" style="height: 200px;">Item 4</div>
+                <div class="demo-masonry-item" style="height: 160px;">Item 5</div>
+                <div class="demo-masonry-item" style="height: 130px;">Item 6</div>
+                <div class="demo-masonry-item" style="height: 170px;">Item 7</div>
+                <div class="demo-masonry-item" style="height: 150px;">Item 8</div>
+                <div class="demo-masonry-item" style="height: 190px;">Item 9</div>
+                <div class="demo-masonry-item" style="height: 140px;">Item 10</div>
+                <div class="demo-masonry-item" style="height: 165px;">Item 11</div>
+                <div class="demo-masonry-item" style="height: 175px;">Item 12</div>
+            </div>
+
+            <div style="margin-top: var(--darkui-spacing-8); text-align: center;">
+                <a href="https://codepen.io/soyleninjs/pen/GRMdQqp" target="_blank" rel="noopener noreferrer" class="button button-primary">
+                    Ver más ejemplos en CodePen
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-secondary);">
+        <div class="container" style="max-width: 900px;">
+            <div style="text-align: center; margin-bottom: var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    Instalación
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Elige el método que prefieras para integrar Light Masonry en tu proyecto
+                </p>
+            </div>
+
+            <div style="margin-bottom: var(--darkui-spacing-8);">
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">NPM</h3>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>Terminal</span>
+                    </div>
+                    <pre class="language-bash line-numbers"><code>npm install light-masonry</code></pre>
+                </div>
+
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript - ES Modules</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>import LightMasonry from 'light-masonry';</code></pre>
+                </div>
+
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript - CommonJS</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>const LightMasonry = require('light-masonry');</code></pre>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">CDN</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    <strong>unpkg:</strong>
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>HTML</span>
+                    </div>
+                    <pre class="language-html line-numbers"><code>&lt;!-- CSS --&gt;
+&lt;link rel="stylesheet" href="https://unpkg.com/light-masonry/light-masonry.min.css"&gt;
+
+&lt;!-- JavaScript --&gt;
+&lt;script src="https://unpkg.com/light-masonry/light-masonry.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+
+                <p style="color: var(--darkui-text-secondary); margin-top: var(--darkui-spacing-4); margin-bottom: var(--darkui-spacing-4);">
+                    <strong>jsDelivr:</strong>
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>HTML</span>
+                    </div>
+                    <pre class="language-html line-numbers"><code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/light-masonry/light-masonry.min.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/light-masonry/light-masonry.min.js"&gt;&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="quick-start" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-primary);">
+        <div class="container" style="max-width: 900px;">
+            <div style="text-align: center; margin-bottom: var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    Inicio Rápido
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Tres simples pasos para tener tu layout masonry funcionando
+                </p>
+            </div>
+
+            <div style="margin-bottom: var(--darkui-spacing-8);">
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">1. Estructura HTML</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    Crea un contenedor con los elementos que quieres organizar:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>HTML</span>
+                    </div>
+                    <pre class="language-html line-numbers"><code>&lt;div class="masonry-container"&gt;
+  &lt;div class="masonry-item"&gt;Item 1&lt;/div&gt;
+  &lt;div class="masonry-item"&gt;Item 2&lt;/div&gt;
+  &lt;div class="masonry-item"&gt;Item 3&lt;/div&gt;
+  &lt;div class="masonry-item"&gt;Item 4&lt;/div&gt;
+  &lt;!-- Más items... --&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-bottom: var(--darkui-spacing-8);">
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">2. Incluir CSS</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    Importa los estilos necesarios:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>CSS - Import</span>
+                    </div>
+                    <pre class="language-css line-numbers"><code>@import "light-masonry/light-masonry.min.css";</code></pre>
+                </div>
+
+                <p style="color: var(--darkui-text-secondary); margin-top: var(--darkui-spacing-4); margin-bottom: var(--darkui-spacing-4);">
+                    O usa un tag <code class="code-inline">&lt;link&gt;</code>:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>HTML - Link</span>
+                    </div>
+                    <pre class="language-html line-numbers"><code>&lt;link rel="stylesheet" href="path/to/light-masonry.min.css"&gt;</code></pre>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">3. Inicializar JavaScript</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    Crea una nueva instancia de Light Masonry:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>// Selecciona el contenedor
+const container = document.querySelector('.masonry-container');
+
+// Inicializa Light Masonry
+const masonry = new LightMasonry(container, {
+  defaultColumns: 4,
+  responsive: {
+    1440: 4,
+    1024: 3,
+    768: 2,
+    480: 1
+  }
+});</code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--darkui-spacing-8); padding: var(--darkui-spacing-6); background: var(--darkui-bg-secondary); border: 1px solid var(--darkui-border-primary); border-radius: var(--darkui-radius-lg); border-left: 4px solid var(--darkui-color-success);">
+                <h4 class="heading-5" style="margin-bottom: var(--darkui-spacing-3); color: var(--darkui-color-success);">¡Listo!</h4>
+                <p style="color: var(--darkui-text-secondary);">
+                    Tu layout masonry está funcionando. Los items se distribuirán automáticamente en columnas y se adaptarán al cambiar el tamaño de la ventana.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Reference Section -->
+    <section id="api" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-secondary);">
+        <div class="container" style="max-width: 1000px;">
+            <div style="text-align: center; margin-bottom: var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    API Reference
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Documentación completa de opciones y configuración
+                </p>
+            </div>
+
+            <!-- Constructor -->
+            <div style="margin-bottom: var(--darkui-spacing-10);">
+                <h3 class="heading-3" style="margin-bottom: var(--darkui-spacing-4);">Constructor</h3>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>new LightMasonry(element, options)</code></pre>
+                </div>
+
+                <div style="margin-top: var(--darkui-spacing-6);">
+                    <h4 class="heading-5" style="margin-bottom: var(--darkui-spacing-3);">Parámetros</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: var(--darkui-bg-tertiary); border-bottom: 1px solid var(--darkui-border-primary);">
+                                <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Parámetro</th>
+                                <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Tipo</th>
+                                <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                                <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">element</code></td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">HTMLElement</td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">El contenedor del layout masonry (requerido)</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">options</code></td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Object</td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Objeto de configuración (opcional)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Options Table -->
+            <div style="margin-bottom: var(--darkui-spacing-10);">
+                <h3 class="heading-3" style="margin-bottom: var(--darkui-spacing-4);">Opciones</h3>
+
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: var(--darkui-spacing-6);">
+                    <thead>
+                        <tr style="background: var(--darkui-bg-tertiary); border-bottom: 1px solid var(--darkui-border-primary);">
+                            <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Opción</th>
+                            <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Tipo</th>
+                            <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Por Defecto</th>
+                            <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                            <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">defaultColumns</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Number</td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">4</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Número de columnas cuando no hay breakpoints activos</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                            <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">resizeDelay</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Number</td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">0</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Delay en ms para debounce del resize (0 = sin debounce)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                            <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">responsive</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Object</td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">{}</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Breakpoints y columnas (desktop-first)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                            <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">init</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Function</td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">() => {}</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Callback ejecutado al inicializar</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">afterBreakpoint</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Function</td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">() => {}</code></td>
+                            <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Callback ejecutado al cambiar de breakpoint</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- defaultColumns -->
+                <div style="margin-bottom: var(--darkui-spacing-8);">
+                    <h4 class="heading-4" style="margin-bottom: var(--darkui-spacing-3);">defaultColumns</h4>
+                    <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                        Define el número de columnas por defecto cuando el viewport es mayor que todos los breakpoints definidos.
+                    </p>
+                    <div class="code-example">
+                        <div class="code-example-header">
+                            <span>JavaScript</span>
+                        </div>
+                        <pre class="language-javascript line-numbers"><code>new LightMasonry(container, {
+  defaultColumns: 5 // 5 columnas por defecto
+});</code></pre>
+                    </div>
+                </div>
+
+                <!-- resizeDelay -->
+                <div style="margin-bottom: var(--darkui-spacing-8);">
+                    <h4 class="heading-4" style="margin-bottom: var(--darkui-spacing-3);">resizeDelay</h4>
+                    <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                        Activa el debounce para el evento resize. Mejora el rendimiento esperando a que el usuario termine de redimensionar.
+                    </p>
+                    <div class="code-example">
+                        <div class="code-example-header">
+                            <span>JavaScript</span>
+                        </div>
+                        <pre class="language-javascript line-numbers"><code>new LightMasonry(container, {
+  resizeDelay: 250 // Espera 250ms después del último resize
+});</code></pre>
+                    </div>
+                    <p style="color: var(--darkui-text-secondary); margin-top: var(--darkui-spacing-4);">
+                        <strong>Valores recomendados:</strong><br>
+                        • <code class="code-inline">0</code>: Sin debounce (respuesta instantánea)<br>
+                        • <code class="code-inline">150-250</code>: Balance entre rendimiento y respuesta<br>
+                        • <code class="code-inline">300-500</code>: Mejor rendimiento, ligero delay
+                    </p>
+                </div>
+
+                <!-- responsive -->
+                <div style="margin-bottom: var(--darkui-spacing-8);">
+                    <h4 class="heading-4" style="margin-bottom: var(--darkui-spacing-3);">responsive</h4>
+                    <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                        Define breakpoints y el número de columnas para cada uno. Usa un enfoque <strong>desktop-first</strong>:
+                        cuando el ancho del viewport es menor o igual al breakpoint, se aplica ese número de columnas.
+                    </p>
+                    <div class="code-example">
+                        <div class="code-example-header">
+                            <span>JavaScript</span>
+                        </div>
+                        <pre class="language-javascript line-numbers"><code>new LightMasonry(container, {
+  responsive: {
+    1440: 4, // 4 columnas cuando width <= 1440px
+    1024: 3, // 3 columnas cuando width <= 1024px
+    768: 2,  // 2 columnas cuando width <= 768px
+    480: 1   // 1 columna cuando width <= 480px
+  }
+});</code></pre>
+                    </div>
+                </div>
+
+                <!-- Callbacks -->
+                <div>
+                    <h4 class="heading-4" style="margin-bottom: var(--darkui-spacing-3);">Callbacks</h4>
+                    <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                        Ambos callbacks reciben un objeto <code class="code-inline">data</code> con información del estado actual:
+                    </p>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: var(--darkui-spacing-6);">
+                        <thead>
+                            <tr style="background: var(--darkui-bg-tertiary); border-bottom: 1px solid var(--darkui-border-primary);">
+                                <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Propiedad</th>
+                                <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Tipo</th>
+                                <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                                <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">columns</code></td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Number</td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Número actual de columnas</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">breakpoint</code></td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Number | String</td>
+                                <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Breakpoint activo o 'defaultColumns'</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="code-example">
+                        <div class="code-example-header">
+                            <span>JavaScript</span>
+                        </div>
+                        <pre class="language-javascript line-numbers"><code>new LightMasonry(container, {
+  init: (data) => {
+    console.log('Inicializado con', data.columns, 'columnas');
+    console.log('Breakpoint:', data.breakpoint);
+  },
+  afterBreakpoint: (data) => {
+    console.log('Cambiado a', data.columns, 'columnas');
+
+    // Ejemplo: activar animaciones en mobile
+    if (data.columns === 1) {
+      console.log('Vista móvil activada');
+    }
+  }
+});</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-primary);">
+        <div class="container" style="max-width: 900px;">
+            <div style="text-align: center; margin-bottom: var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    Ejemplos de Uso
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Casos de uso comunes y configuraciones típicas
+                </p>
+            </div>
+
+            <!-- Ejemplo básico -->
+            <div style="margin-bottom: var(--darkui-spacing-10);">
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">Uso Básico</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    Configuración mínima para empezar rápidamente:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>const masonry = new LightMasonry(
+  document.querySelector('.masonry-container')
+);</code></pre>
+                </div>
+            </div>
+
+            <!-- Ejemplo responsive completo -->
+            <div style="margin-bottom: var(--darkui-spacing-10);">
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">Responsive Completo</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    Layout completamente adaptable con callbacks:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>const masonry = new LightMasonry(
+  document.querySelector('.masonry-container'),
+  {
+    defaultColumns: 4,
+    responsive: {
+      1440: 4,
+      1024: 3,
+      768: 2,
+      480: 1
+    },
+    resizeDelay: 200,
+    init: (data) => {
+      console.log(`Inicializado con ${data.columns} columnas`);
+    },
+    afterBreakpoint: (data) => {
+      console.log(`Ahora mostrando ${data.columns} columnas`);
+    }
+  }
+);</code></pre>
+                </div>
+            </div>
+
+            <!-- Ejemplo con galería de imágenes -->
+            <div style="margin-bottom: var(--darkui-spacing-10);">
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">Galería de Imágenes</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    HTML y JavaScript para una galería tipo Pinterest:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>HTML</span>
+                    </div>
+                    <pre class="language-html line-numbers"><code>&lt;div class="gallery"&gt;
+  &lt;div class="gallery-item"&gt;
+    &lt;img src="image1.jpg" alt="Imagen 1"&gt;
+    &lt;h3&gt;Título 1&lt;/h3&gt;
+    &lt;p&gt;Descripción...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="gallery-item"&gt;
+    &lt;img src="image2.jpg" alt="Imagen 2"&gt;
+    &lt;h3&gt;Título 2&lt;/h3&gt;
+    &lt;p&gt;Descripción...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;!-- Más items... --&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>CSS</span>
+                    </div>
+                    <pre class="language-css line-numbers"><code>.gallery {
+  --gap: 20px;
+  --gap-between-columns: 30px;
+  --gap-between-items: 20px;
+  padding: 20px;
+}
+
+.gallery-item {
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.gallery-item:hover {
+  transform: translateY(-5px);
+}
+
+.gallery-item img {
+  width: 100%;
+  display: block;
+}
+
+.gallery-item h3 {
+  padding: 15px 15px 5px;
+  margin: 0;
+}
+
+.gallery-item p {
+  padding: 0 15px 15px;
+  margin: 0;
+  color: #666;
+}</code></pre>
+                </div>
+
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>const gallery = new LightMasonry(
+  document.querySelector('.gallery'),
+  {
+    defaultColumns: 4,
+    responsive: {
+      1200: 4,
+      900: 3,
+      600: 2,
+      400: 1
+    },
+    resizeDelay: 150
+  }
+);</code></pre>
+                </div>
+            </div>
+
+            <!-- Ejemplo con contenido dinámico -->
+            <div>
+                <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">Contenido Dinámico</h3>
+                <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-4);">
+                    Cargar más items y reinicializar el layout:
+                </p>
+                <div class="code-example">
+                    <div class="code-example-header">
+                        <span>JavaScript</span>
+                    </div>
+                    <pre class="language-javascript line-numbers"><code>const container = document.querySelector('.masonry-container');
+let masonry = new LightMasonry(container, {
+  defaultColumns: 4,
+  responsive: { 1024: 3, 768: 2, 480: 1 }
+});
+
+// Función para cargar más items
+function loadMoreItems() {
+  fetch('/api/items')
+    .then(response => response.json())
+    .then(items => {
+      // Añadir nuevos items al DOM
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'masonry-item';
+        div.innerHTML = item.content;
+        container.appendChild(div);
+      });
+
+      // Reinicializar para incluir los nuevos items
+      masonry = new LightMasonry(container, {
+        defaultColumns: 4,
+        responsive: { 1024: 3, 768: 2, 480: 1 }
+      });
+    });
+}
+
+// Llamar cuando el usuario hace scroll al final
+window.addEventListener('scroll', () => {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    loadMoreItems();
+  }
+});</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CSS Variables Section -->
+    <section id="css-vars" style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-secondary);">
+        <div class="container" style="max-width: 900px;">
+            <div style="text-align: center; margin-bottom: var(--darkui-spacing-10);">
+                <h2 class="heading-2" style="margin-bottom: var(--darkui-spacing-4);">
+                    Variables CSS
+                </h2>
+                <p class="text-lg" style="color: var(--darkui-text-secondary);">
+                    Personaliza los espaciados usando variables CSS
+                </p>
+            </div>
+
+            <p style="color: var(--darkui-text-secondary); margin-bottom: var(--darkui-spacing-6);">
+                Light Masonry utiliza variables CSS personalizadas para controlar los espaciados. Puedes modificarlas directamente en tu CSS:
+            </p>
+
+            <div class="code-example" style="margin-bottom: var(--darkui-spacing-6);">
+                <div class="code-example-header">
+                    <span>CSS</span>
+                </div>
+                <pre class="language-css line-numbers"><code>.masonry-container {
+  /* General gap (aplica a columnas e items) */
+  --gap: 20px;
+
+  /* Gap horizontal entre columnas */
+  --gap-between-columns: var(--gap);
+
+  /* Gap vertical entre items */
+  --gap-between-items: var(--gap);
+}</code></pre>
+            </div>
+
+            <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">Variables Disponibles</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: var(--darkui-spacing-8);">
+                <thead>
+                    <tr style="background: var(--darkui-bg-tertiary); border-bottom: 1px solid var(--darkui-border-primary);">
+                        <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Variable</th>
+                        <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Por Defecto</th>
+                        <th style="padding: var(--darkui-spacing-3); text-align: left; color: var(--darkui-text-secondary); font-size: var(--darkui-font-size-sm);">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                        <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">--gap</code></td>
+                        <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">5px</code></td>
+                        <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Espaciado general para columnas e items</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--darkui-border-primary);">
+                        <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">--gap-between-columns</code></td>
+                        <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">var(--gap)</code></td>
+                        <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Espaciado horizontal entre columnas</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: var(--darkui-spacing-3);"><code class="code-inline">--gap-between-items</code></td>
+                        <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);"><code class="code-inline">var(--gap)</code></td>
+                        <td style="padding: var(--darkui-spacing-3); color: var(--darkui-text-secondary);">Espaciado vertical entre items</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="heading-4" style="margin-bottom: var(--darkui-spacing-4);">Ejemplo de Personalización</h3>
+            <div class="code-example">
+                <div class="code-example-header">
+                    <span>CSS</span>
+                </div>
+                <pre class="language-css line-numbers"><code>/* Diferentes espaciados para diferentes tamaños */
+.masonry-container {
+  --gap: 30px;
+  --gap-between-columns: 40px;
+  --gap-between-items: 20px;
+}
+
+/* Reducir gaps en móvil */
+@media (max-width: 768px) {
+  .masonry-container {
+    --gap: 15px;
+    --gap-between-columns: 15px;
+    --gap-between-items: 15px;
+  }
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="padding: var(--darkui-spacing-12) 0; background: var(--darkui-bg-primary); border-top: 1px solid var(--darkui-border-primary);">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--darkui-spacing-8); margin-bottom: var(--darkui-spacing-8);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: var(--darkui-spacing-3); margin-bottom: var(--darkui-spacing-4);">
+                        <div style="width: 40px; height: 40px; background: var(--darkui-gradient-primary); border-radius: var(--darkui-radius-md); display: flex; align-items: center; justify-content: center; font-size: 24px;">⚡</div>
+                        <span class="heading-5">Light Masonry</span>
+                    </div>
+                    <p style="color: var(--darkui-text-secondary);">
+                        Layouts masonry simples, elegantes y responsivos con CSS Grid.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="heading-6" style="margin-bottom: var(--darkui-spacing-4);">Enlaces</h4>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--darkui-spacing-2);">
+                        <li><a href="https://github.com/soyleninjs/light-masonry" target="_blank" rel="noopener noreferrer" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">GitHub</a></li>
+                        <li><a href="https://www.npmjs.com/package/light-masonry" target="_blank" rel="noopener noreferrer" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">NPM</a></li>
+                        <li><a href="https://codepen.io/soyleninjs/pen/GRMdQqp" target="_blank" rel="noopener noreferrer" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">Demo en CodePen</a></li>
+                        <li><a href="https://github.com/soyleninjs/light-masonry/issues" target="_blank" rel="noopener noreferrer" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">Reportar Issues</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="heading-6" style="margin-bottom: var(--darkui-spacing-4);">Recursos</h4>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--darkui-spacing-2);">
+                        <li><a href="#installation" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">Instalación</a></li>
+                        <li><a href="#quick-start" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">Inicio Rápido</a></li>
+                        <li><a href="#api" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">API Reference</a></li>
+                        <li><a href="#examples" style="color: var(--darkui-text-secondary); text-decoration: none; transition: color var(--darkui-transition-fast);" onmouseover="this.style.color='var(--darkui-text-primary)'" onmouseout="this.style.color='var(--darkui-text-secondary)'">Ejemplos</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="padding-top: var(--darkui-spacing-6); border-top: 1px solid var(--darkui-border-primary); text-align: center; color: var(--darkui-text-secondary);">
+                <p style="margin: 0;">
+                    Hecho con ❤️ por <a href="https://github.com/soyleninjs" target="_blank" rel="noopener noreferrer" style="color: var(--darkui-color-primary); text-decoration: none;">@soyleninjs</a>
+                </p>
+                <p style="margin: var(--darkui-spacing-2) 0 0;">
+                    Light Masonry v2.0.0 • Licencia MIT
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    </div>
+
+    <!-- DarkUI JS -->
+    <script src="ui/darkui.js"></script>
+
+    <!-- Prism.js for code highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+    <!-- Light Masonry JS -->
+    <script src="js/light-masonry.js"></script>
+
+    <!-- Smooth scroll and active nav -->
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href.length > 1) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Active navigation highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('[data-section]');
+
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        window.addEventListener('load', updateActiveNav);
+
+        // Initialize demo masonry
+        window.addEventListener('load', () => {
+            const demoContainer = document.getElementById('demo-masonry');
+            if (demoContainer) {
+                new LightMasonry(demoContainer, {
+                    defaultColumns: 4,
+                    responsive: {
+                        1024: 4,
+                        768: 3,
+                        600: 2,
+                        480: 1
+                    },
+                    resizeDelay: 150
+                });
+            }
+        });
+    </script>
+</body>
+</html>

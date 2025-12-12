@@ -1,246 +1,165 @@
-/* eslint-disable no-empty-function, no-unused-vars */
 /*
-
-  agregar configuracion para Mode:
-  normal (default) - orden normal, de izquierda a derecha
-  reverse - orden invertido, de derecha a izquierda
-  vertical-fill - orden de izquierda a derecha pero llenando hacia las columnas con menos altura
-  
-  Configuracion para diferentes anchos de hijos.
-
+*
+*
+* agregar configuracion para Mode:
+*   normal (default) - orden normal, de izquierda a derecha
+*   reverse - orden invertido, de derecha a izquierda
+*   filled - orden de izquierda a derecha pero llenando hacia las columnas con menos altura
+* 
+* Agregar un metodo para reiniciar el layout.
+*
+*
+*
 */
 
-const lightMasonry = (containerClass, newOptions = {}) => {
+class LightMasonry {
   // ------------------------ VARAIBLES ------------------------
-  if (containerClass === "") {
-    window.console.error(
-      "[lightMasonry]: Selector del contenedor vacío, coloca un selector válido!",
-    );
-    return
+  constructor($containerGrid, options = {}) {
+    this.$containerGrid = $containerGrid;
+    this.options = options;
+    
+    if (!this.$containerGrid) {
+      window.console.error(`[LightMasonry]: Elemento no encontrado: ${this.$containerGrid}`);
+      return;
+    }
+    
+    this.limbo = document.createDocumentFragment();
+    this.column = '<div class="light-masonry-column"></div>';
+    this.classItemColumn = 'light-masonry-item';
+    this.classWrapper = 'light-masonry-grid';
+    this.classInitialized = 'light-masonry-initialized';
+    this.dataCallback = {};
+    this.finalOptions = {
+      defaultColumns: 4,
+      resizeDelay: 0,
+      responsive: {},
+      init: (data) => {},
+      afterBreakpoint: (data) => {},
+      ...this.options
+    }
+
+    this._prepareContainer();
+    this._prepareItems();
+    this._setLayout();
+    this._getItems();
+    this._setColumns();
+    this._setItems();
+    this._setAttributes();
+    this._handleEvents();
+    this.finalOptions.init(this.dataCallback);
+
+    // ------------------------ END INIT ------------------------
   }
-  const $masonryWrapper = document.querySelector(containerClass);
-  const hiddenBox =
-    '<div class="light-masonry-hidden-box" style="display: none !important;"></div>';
-  const column = '<div class="light-masonry-column"></div>';
-  const classItemColumn = "light-masonry-item";
-  const classWrapper = "light-masonry-wrapper";
-  const classInitialized = "light-masonry-initialized";
-  const dataCallback = {};
-  let firstExecution = false;
-  let allItems = [];
-  const finalOptions = {
-    defaultColumns: 4,
-    resizeDelay: 0, 
-    responsive: {
-      1440: 4,
-      834: 3,
-      680: 2,
-    },
-    init: (data) => {},
-    afterBreakpoint: (data) => {},
-    ...newOptions,
-  };
 
-  // ------------------------ END VARAIBLES ------------------------
+  _handleEvents() {
+    if (this.finalOptions.resizeDelay === 0) {
+      window.addEventListener('resize', () => {
+        this._setLayout('resize');
+      });
+    } else {
+      window.addEventListener(
+        'resize',
+        this._debounce(() => {
+          this._setLayout('resize');
+        }, this.finalOptions.resizeDelay),
+      );
+    }
+  }
+  
+  _prepareContainer() {
+    this.$containerGrid.classList.add(this.classWrapper);
+    this.$containerGrid.classList.add(this.classInitialized);
+  }
 
-  // ------------------------ FUNCTIONALITY ------------------------
-
-  const setOrder = () => {
-    const $masonryItems = $masonryWrapper.querySelectorAll(
-      ".light-masonry-item"
-    );
+  _prepareItems() {
+    const $masonryItems = Array.from(this.$containerGrid.children)
 
     $masonryItems.forEach(($element, index) => {
+      $element.classList.add(this.classItemColumn);
       $element.dataset.index = index;
     });
+  }
+
+  _setAttributes() {
+    this.$containerGrid.setAttribute('data-breakpoint', this.dataCallback.breakpoint);
+    this.$containerGrid.setAttribute('data-columns', this.dataCallback.columns);
   };
 
-  const setChildsClass = () => {
-    Array.from($masonryWrapper.children).forEach(($element) => {
-      $element.classList.add(classItemColumn);
+  _getItems() {
+    const $items = this.$containerGrid.querySelectorAll('.light-masonry-item');
+
+    $items.forEach(($element) => {
+      this.limbo.appendChild($element);
     });
   };
 
-  const setWrapperClass = () => {
-    $masonryWrapper.classList.add(classWrapper);
-  };
-
-  const setInitializedClass = () => {
-    $masonryWrapper.classList.add(classInitialized);
-  };
-
-  const setAttributes = () => {
-    $masonryWrapper.setAttribute("data-breakpoint", dataCallback.breakpoint);
-    $masonryWrapper.setAttribute("data-columns", dataCallback.columns);
-  };
-
-  const createHiddenBox = () => {
-    $masonryWrapper.insertAdjacentHTML("beforeend", hiddenBox);
-  };
-
-  const getItems = () => {
-    const $masonryItems = $masonryWrapper.querySelectorAll(
-      ".light-masonry-item"
-    );
-
-    $masonryItems.forEach(($element) => {
-      $masonryWrapper
-        .querySelector(".light-masonry-hidden-box")
-        .appendChild($element);
-    });
-  };
-
-  const removeColumns = () => {
-    $masonryWrapper
-      .querySelectorAll(".light-masonry-column")
+  _removeColumns() {
+    this.$containerGrid
+      .querySelectorAll('.light-masonry-column')
       .forEach(($element) => {
         $element.remove();
       });
   };
 
-  const addColumns = (columns) => {
-    for (let i = 1; i <= columns; i++) {
-      $masonryWrapper.insertAdjacentHTML("beforeend", column);
+  _setColumns() {
+    for (let i = 1; i <= this.dataCallback.columns; i++) {
+      this.$containerGrid.insertAdjacentHTML('beforeend', this.column);
     }
   };
 
-  const setItems = () => {
-    const $arrayIndex = [];
-    const $masonryItems = $masonryWrapper.querySelectorAll(
-      ".light-masonry-item"
-    );
-
-    $masonryItems.forEach(($element) => {
-      $arrayIndex.push($element.dataset.index);
-    });
-
-    allItems = $arrayIndex.sort((a, b) => a - b);
-
-    const setItemsInColum = ($column) => {
-      if (!allItems.length) {
-        return;
-      }
-
-      $column.appendChild(
-        $masonryWrapper.querySelector(
-          `.light-masonry-item[data-index="${allItems[0]}"]`
-        )
-      );
-      allItems.shift();
-    };
-
-    while (allItems.length) {
-      const $columns = $masonryWrapper.querySelectorAll(
-        ".light-masonry-column"
-      );
-      $columns.forEach(setItemsInColum);
-    }
+  _setItems() {
+    const $items = Array.from(this.limbo.querySelectorAll('.light-masonry-item'));
+    $items.sort((a, b) => Number(a.dataset.index) - Number(b.dataset.index))
+    const $columns = this.$containerGrid.querySelectorAll('.light-masonry-column');
+    
+    let columnIndex = 0
+    $items.forEach($item => {
+      $columns[columnIndex].appendChild($item)
+      columnIndex = (columnIndex + 1) % this.dataCallback.columns
+    })
   };
 
-  const setInitCallback = (data) => {
-    if (firstExecution) {
-      return;
-    }
-    finalOptions.init(data);
-    firstExecution = true;
-  };
+  _setLayout(type = 'default') {
+    let columns = this.finalOptions.defaultColumns;
+    this.dataCallback.breakpoint = 'defaultColumns';
 
-  const setBreakpointCallback = (data) => {
-    if (firstExecution) {
-      finalOptions.afterBreakpoint(data);
-    }
-  };
-
-  const setLayout = () => {
-    let finalColumns = finalOptions.defaultColumns;
-    dataCallback.breakpoint = "defaultColumns"
-    if (finalOptions.responsive !== undefined) {
-      Object.keys(finalOptions.responsive)
+    if (this.finalOptions.responsive !== undefined && Object.keys(this.finalOptions.responsive).length > 0) {
+      Object.keys(this.finalOptions.responsive)
         .reverse()
         .forEach((query) => {
           if (window.innerWidth > Number(query)) {
             return;
           }
 
-          dataCallback.breakpoint = Number(query);
-          finalColumns = finalOptions.responsive[query];
+          columns = this.finalOptions.responsive[query];
+          this.dataCallback.breakpoint = Number(query);
         });
     }
 
-    if (dataCallback.columns === finalColumns) {
-      dataCallback.columns = finalColumns;
-      if (!firstExecution) {
-        getItems();
-        removeColumns();
-        addColumns(finalColumns);
-        setItems();
-        setAttributes();
-      }
-    } else {
-      dataCallback.columns = finalColumns;
-      getItems();
-      removeColumns();
-      addColumns(finalColumns);
-      setItems();
-      setAttributes();
-      setBreakpointCallback(dataCallback);
+    if (type === 'resize' && columns !== this.dataCallback.columns) {
+      this.dataCallback.columns = columns;
+      this._getItems();
+      this._removeColumns();
+      this._setColumns();
+      this._setItems();
+      this._setAttributes();
+      this.finalOptions.afterBreakpoint(this.dataCallback);
+    } else if (type === 'default') {
+      this.dataCallback.columns = columns;
     }
   };
 
-  const debounce = (func, wait, immediate = false) => {
-    let timeout;
-
+  _debounce(fn, wait) {
+    let t;
     return (...args) => {
-      let callNow = immediate && !timeout;
-    
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        timeout = null;
-        if (!immediate) func.apply(this, args);
-      }, wait);
-    
-      if (callNow) func.apply(this, args);
+      window.clearTimeout(t);
+      t = window.setTimeout(() => fn.apply(this, args), wait);
     };
-  };
-
-  // ------------------------ END FUNCTIONALITY ------------------------
-
-  // ------------------------ BASE CONFIG ------------------------
-
-  if (!$masonryWrapper) {
-    window.console.error(
-      "[lightMasonry]: Contenedor no encontrado, coloca un selector válido!",
-    );
-    return;
   }
-
-  setWrapperClass();
-  setChildsClass();
-  setOrder();
-  createHiddenBox();
-
-  // ------------------------ END BASE CONFIG ------------------------
-
-  // ------------------------ INIT ------------------------
-
-  setLayout();
-  setInitializedClass();
-  setInitCallback(dataCallback);
-
-  // ------------------------ END INIT ------------------------
-
-  // ------------------------ EVENTS ------------------------
-
-  if (finalOptions.resizeDelay === 0) {
-    window.addEventListener("resize", setLayout);
-  }
-  else{
-    window.addEventListener("resize", debounce(setLayout, finalOptions.resizeDelay));
-  }
-
-  // ------------------------ END EVENTS ------------------------
 };
 
-window.lightMasonry = lightMasonry;
+window.LightMasonry = LightMasonry;
 
-export default lightMasonry;
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = LightMasonry;
+}

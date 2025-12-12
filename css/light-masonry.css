@@ -1,12 +1,13 @@
 /* light-masonry.css v1.0.0 */
-.light-masonry-wrapper {
+.light-masonry-grid {
   --gap: 5px;
   --gap-between-columns: var(--gap);
   --gap-between-items: var(--gap);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  width: 100%;
+  --max-width-item: 100%;
+  display: flex;
+  justify-content: center;
   grid-gap: var(--gap-between-columns);
+  width: 100%;
 }
 
 .light-masonry-column {
@@ -14,13 +15,11 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  gap: var(--gap-between-items);
   width: 100%;
+  max-width: var(--max-width-item);
 }
 
 .light-masonry-column .light-masonry-item {
   width: 100%;
-}
-
-.light-masonry-column .light-masonry-item:not(:last-child) {
-  margin-bottom: var(--gap-between-items);
 }
